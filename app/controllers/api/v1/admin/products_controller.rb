@@ -23,12 +23,13 @@ module Api
                       products.order(created_at: :desc)
                     end
 
-          # Pagination
-          page = (params[:page] || 1).to_i
-          per_page = (params[:per_page] || 20).to_i
-          per_page = [per_page, 100].min
+          # Pagination with safe defaults
+          page = [params[:page].to_i, 1].max
+          per_page = params[:per_page].to_i
+          per_page = per_page.positive? ? [per_page, 100].min : 20
 
           total_count = products.count
+          total_pages = per_page.positive? ? (total_count.to_f / per_page).ceil : 1
           products = products.offset((page - 1) * per_page).limit(per_page)
 
           render json: {
@@ -37,7 +38,7 @@ module Api
               total_count: total_count,
               page: page,
               per_page: per_page,
-              total_pages: (total_count.to_f / per_page).ceil
+              total_pages: [total_pages, 1].max
             }
           }
         end

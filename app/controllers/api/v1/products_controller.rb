@@ -9,9 +9,15 @@ module Api
         # Apply search filter
         products = products.search_by_name(params[:q]) if params[:q].present?
 
-        # Apply price range filter
-        products = products.where("price_cents >= ?", params[:min_price_cents]) if params[:min_price_cents].present?
-        products = products.where("price_cents <= ?", params[:max_price_cents]) if params[:max_price_cents].present?
+        # Apply price range filter (only if valid integer)
+        if params[:min_price_cents].present?
+          min_price = params[:min_price_cents].to_i
+          products = products.where("price_cents >= ?", min_price) if min_price.is_a?(Integer)
+        end
+        if params[:max_price_cents].present?
+          max_price = params[:max_price_cents].to_i
+          products = products.where("price_cents <= ?", max_price) if max_price.is_a?(Integer)
+        end
 
         # Apply stock filter
         products = products.in_stock if params[:in_stock] == "true"
@@ -28,12 +34,13 @@ module Api
                     products.by_name
                   end
 
-        # Pagination
-        page = (params[:page] || 1).to_i
-        per_page = (params[:per_page] || 20).to_i
-        per_page = [per_page, 100].min # Cap at 100 per page
+        # Pagination with safe defaults
+        page = [params[:page].to_i, 1].max
+        per_page = params[:per_page].to_i
+        per_page = per_page.positive? ? [per_page, 100].min : 20
 
         total_count = products.count
+        total_pages = per_page.positive? ? (total_count.to_f / per_page).ceil : 1
         products = products.offset((page - 1) * per_page).limit(per_page)
 
         render json: {
@@ -42,7 +49,7 @@ module Api
             total_count: total_count,
             page: page,
             per_page: per_page,
-            total_pages: (total_count.to_f / per_page).ceil
+            total_pages: [total_pages, 1].max
           }
         }
       end
