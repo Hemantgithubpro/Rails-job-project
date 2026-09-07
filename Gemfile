@@ -45,7 +45,7 @@ gem "net-imap", ">= 0.4.14", require: false
 gem "net-smtp", require: false
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", require: "debug/prelude"
   gem "rspec-rails", "~> 6.0"
   gem "factory_bot_rails"
   gem "faker"

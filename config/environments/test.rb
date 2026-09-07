@@ -28,9 +28,6 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
-  # Store uploaded files on the local file system in a temporary directory.
-  config.active_storage.service = :test
-
   # Tell Action Mailer not to deliver emails to the real world.
   config.action_mailer.delivery_method = :test
 
@@ -57,4 +54,7 @@ Rails.application.configure do
 
   # Raise error when a before_action's only reference is missing.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Disable host authorization in test environment
+  config.host_authorization = { exclude: ->(request) { true } }
 end

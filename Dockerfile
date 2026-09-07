@@ -7,6 +7,8 @@ FROM ruby:3.3-slim AS base
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     libpq-dev \
+    postgresql-client \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -14,8 +16,7 @@ WORKDIR /rails
 
 # Set production-like defaults for build
 ENV RAILS_ENV="production" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development:test"
+    BUNDLE_PATH="/usr/local/bundle"
 
 # Install build dependencies
 FROM base AS build
@@ -46,12 +47,6 @@ FROM base
 # Copy built artifacts: gems and application
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
-
-# Add a non-root user for security
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
 
 # Entrypoint prepares the database and runs the command
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]

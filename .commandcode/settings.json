@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Shell(git:*)",
-      "Shell(docker:*)"
+      "Shell(docker:*)",
+      "Shell(sleep:*)"
     ],
     "deny": [],
     "defaultMode": "default"
