@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     namespace :v1 do
-      # Authentication routes will be added in Phase 1
+      # Authentication routes
+      post "auth/register", to: "auth#register"
+      post "auth/login", to: "auth#login"
+
       # Product routes will be added in Phase 2
       # Cart routes will be added in Phase 3
       # Checkout and order routes will be added in Phase 4
