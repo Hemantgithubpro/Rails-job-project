@@ -1,0 +1,36 @@
+# PostgreSQL via Docker Compose service `db` (never localhost from containers).
+# Credentials and host come from the environment; see `.env.example`.
+# DATABASE_URL, when set, is merged on top of these values by Rails.
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("POSTGRES_HOST", "db") %>
+  port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
+  username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "postgres") %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("POSTGRES_DB", "mini_ecommerce_development") %>
+
+test:
+  <<: *default
+  database: mini_ecommerce_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: <%= ENV.fetch("POSTGRES_DB", "mini_ecommerce_production") %>
+  cache:
+    <<: *primary_production
+    database: <%= ENV.fetch("POSTGRES_DB", "mini_ecommerce_production") %>_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: <%= ENV.fetch("POSTGRES_DB", "mini_ecommerce_production") %>_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: <%= ENV.fetch("POSTGRES_DB", "mini_ecommerce_production") %>_cable
+    migrations_paths: db/cable_migrate

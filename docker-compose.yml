@@ -1,0 +1,67 @@
+# Mini E-Commerce API — Docker-only development/test environment (Phase 0).
+#
+# All Rails, database, and test commands must run inside containers, e.g.:
+#   docker compose build
+#   docker compose up -d db
+#   docker compose run --rm web bin/rails db:prepare
+#   docker compose run --rm web bin/rails db:seed
+#   docker compose up
+#   docker compose run --rm web bundle exec rspec
+#
+# The web container reaches PostgreSQL via host `db` (service name), never localhost.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mini_ecommerce_development}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-mini_ecommerce_development}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: ${RAILS_ENV:-development}
+      POSTGRES_HOST: db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mini_ecommerce_development}
+      RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-5}
+      PORT: ${PORT:-3000}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - .:/app
+      - bundle_data:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+    command: bash -c "rm -f tmp/pids/server.pid && ./bin/rails server -b 0.0.0.0 -p ${PORT:-3000}"
+    stdin_open: true
+    tty: true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${PORT:-3000}/up || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  pgdata:
+  bundle_data:

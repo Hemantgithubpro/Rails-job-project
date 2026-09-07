@@ -1,0 +1,45 @@
+# Ruby / Rails
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
+.byebug_history
+
+# Bundler
+/.bundle
+/vendor/bundle
+
+# Environment and secrets — never commit real credentials
+.env
+.env.local
+.env.*.local
+/config/master.key
+/config/credentials/*.key
+*.key
+
+# Database dumps
+*.dump
+*.sql
+
+# RSpec / coverage
+/coverage
+/.rspec_status
+
+# Node (unused in API-only app, kept for safety)
+node_modules/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker volumes / local data
+/pgdata
