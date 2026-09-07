@@ -19,6 +19,17 @@ module Api
         end
       end
 
+      def authenticate_admin!
+        unless @current_user&.admin?
+          render json: {
+            error: {
+              code: "forbidden",
+              message: "You are not authorized to perform this action"
+            }
+          }, status: :forbidden
+        end
+      end
+
       def current_user
         @current_user
       end

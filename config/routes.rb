@@ -9,9 +9,15 @@ Rails.application.routes.draw do
       post "auth/register", to: "auth#register"
       post "auth/login", to: "auth#login"
 
-      # Product routes will be added in Phase 2
-      # Cart routes will be added in Phase 3
-      # Checkout and order routes will be added in Phase 4
+      # Product routes (public)
+      resources :products, only: [:index, :show]
+
+      # Admin routes
+      namespace :admin do
+        resources :products, except: [:new, :edit]
+        # Cart routes will be added in Phase 3
+        # Checkout and order routes will be added in Phase 4
+      end
     end
   end
 end
