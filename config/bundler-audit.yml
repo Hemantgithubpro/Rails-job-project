@@ -1,0 +1,6 @@
+# Bundler-audit configuration
+# https://github.com/rubysec/bundler-audit
+
+# Ignore specific advisories (if needed)
+# ignore:
+#   - CVE-2021-12345

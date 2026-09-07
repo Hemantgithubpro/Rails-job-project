@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Thrust is a development server launcher for Rails 8+
+# https://github.com/basecamp/thrust
+
+require "rails/command"
+
+Rails::Command.invoke "server", ARGV

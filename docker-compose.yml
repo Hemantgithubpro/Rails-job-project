@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ecommerce-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-ecommerce}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ecommerce_password}
+      POSTGRES_DB: ${DB_NAME:-ecommerce_development}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-ecommerce} -d ${DB_NAME:-ecommerce_development}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce-web
+    environment:
+      RAILS_ENV: ${RAILS_ENV:-development}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-ecommerce}
+      DB_PASSWORD: ${DB_PASSWORD:-ecommerce_password}
+      DB_NAME: ${DB_NAME:-ecommerce_development}
+      DB_NAME_TEST: ${DB_NAME_TEST:-ecommerce_test}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-development_secret_key_base}
+    ports:
+      - "${RAILS_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/rails
+      - bundle_data:/usr/local/bundle
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  pgdata:
+    name: ecommerce-pgdata
+  bundle_data:
+    name: ecommerce-bundle-data

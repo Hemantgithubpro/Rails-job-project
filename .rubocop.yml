@@ -1,0 +1,48 @@
+# The behavior of RuboCop can be controlled via the .rubocop.yml
+# configuration file. It makes it possible to use the same options
+# between all projects and share via source control.
+
+require:
+  - rubocop-rails-omakase
+
+# Want to see what a cop is called? Uncomment the following.
+# AllCops:
+#   DisplayCopNames: true
+
+# Want to see which cops are disabled? Uncomment the following.
+# AllCops:
+#   DisabledByDefault: true
+
+# Want to see the default configuration? Uncomment the following.
+# inherit_mode:
+#   merge:
+#     - Exclude
+
+# Want to see the default configuration? Uncomment the following.
+# inherit_from:
+#   - https://raw.githubusercontent.com/rails/rubocop-rails-omakase/main/rubocop.yml
+
+# Want to see the default configuration? Uncomment the following.
+# AllCops:
+#   NewCops: enable
+
+# Want to see the default configuration? Uncomment the following.
+# AllCops:
+#   TargetRubyVersion: 3.3
+
+# Want to see the default configuration? Uncomment the following.
+# AllCops:
+#   TargetRailsVersion: 8.1
+
+# Want to see the default configuration? Uncomment the following.
+# AllCops:
+#   Exclude:
+#     - "vendor/**/*"
+#     - "node_modules/**/*"
+#     - "bin/*"
+#     - "db/schema.rb"
+#     - "db/migrate/*"
+#     - "config/environments/*"
+#     - "config/puma.rb"
+#     - "spec/rails_helper.rb"
+#     - "spec/spec_helper.rb"

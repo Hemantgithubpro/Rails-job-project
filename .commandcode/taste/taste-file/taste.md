@@ -1,0 +1,16 @@
+# Taste File
+- Prefers Docker-first development: all commands (setup, tests, migrations, Rails commands) must run through Docker Compose, never directly on the host. Confidence: 0.95
+- Works in strict sequential order: implements in roadmap order, does not move to next phase until current phase is working and verified. Confidence: 0.9
+- Wants systematic phase-end verification: run tests, verify database connectivity, check changed files, report what was implemented/tested, report remaining issues before moving forward. Confidence: 0.9
+- Inspects repository state and explains intended changes before editing files. Confidence: 0.85
+- Does not add unrelated features or dependencies without explicit explanation. Confidence: 0.85
+- Builds API-only, JSON-only Rails applications. Confidence: 0.9
+- Keeps controllers thin; uses service objects for checkout and multi-model operations. Confidence: 0.85
+- Uses integer cents for money representation, never floats. Confidence: 0.9
+- Adds database constraints for important invariants. Confidence: 0.85
+- Prefers PostgreSQL over SQLite. Confidence: 0.9
+- Uses RSpec for testing; expects tests with every implemented feature. Confidence: 0.9
+- Includes health checks in container orchestration where appropriate. Confidence: 0.8
+- Never stores passwords, card data, or secrets in source control. Confidence: 0.95
+- Gives detailed, structured instructions with explicit numbered rules. Confidence: 0.8
+- Expects explanations of what will be created/modified before action is taken. Confidence: 0.85

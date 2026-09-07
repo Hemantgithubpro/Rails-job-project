@@ -1,0 +1,23 @@
+# PostgreSQL configuration for Docker environment
+# Database connection uses environment variables for host, port, username, and password.
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DB_HOST", "db") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USERNAME", "ecommerce") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "ecommerce_password") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "ecommerce_development") %>
+
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME_TEST", "ecommerce_test") %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "ecommerce_production") %>

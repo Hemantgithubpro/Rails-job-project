@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "brakeman"
+
+# Run Brakeman security scan
+result = Brakeman.scan(app_path: ".", quiet: true, rails8: true)
+
+if result.errors.any?
+  puts "Errors encountered during scan:"
+  result.errors.each { |error| puts "  - #{error}" }
+  exit 1
+end
+
+if result.warnings.any?
+  puts "Warnings:"
+  result.warnings.each { |warning| puts "  - #{warning}" }
+end
+
+if result.errors.empty? && result.warnings.empty?
+  puts "No warnings or errors found."
+end

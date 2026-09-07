@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# frozen_string_literal: true
+
+set -e
+
+echo "== Running security checks =="
+bin/brakeman
+bin/bundler-audit
+
+echo "== Running linter =="
+bin/rubocop
+
+echo "== Running tests =="
+bundle exec rspec
+
+echo "== All checks passed! =="

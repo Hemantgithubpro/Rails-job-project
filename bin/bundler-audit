@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/audit/cli"
+
+# Run bundler-audit security check
+Bundler::Audit::CLI.start(["update"])
+Bundler::Audit::CLI.start(["check"])

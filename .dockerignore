@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+docs/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+/config/master.key
+/config/credentials/*.key
+*.key
+
+# Logs and temp
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Bundler
+/.bundle
+/vendor/bundle
+
+# Coverage and test artifacts
+/coverage
+/.rspec_status
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker volumes
+/pgdata
+
+# Command Code
+.commandcode/
